@@ -290,5 +290,11 @@
   "LOGIN_OG_TITLE": "Log ind — Libre Closet",
   "LOGIN_OG_DESC": "Log ind på din Libre Closet-konto for at administrere din garderobe, bygge outfits og planlægge looks.",
   "REGISTER_OG_TITLE": "Opret konto — Libre Closet",
-  "REGISTER_OG_DESC": "Opret din gratis Libre Closet-konto. Selvhostet, open source garderobeorganisering. Intet abonnement, ingen reklamer, ingen sporing."
+  "REGISTER_OG_DESC": "Opret din gratis Libre Closet-konto. Selvhostet, open source garderobeorganisering. Intet abonnement, ingen reklamer, ingen sporing.",
+  "SUPPORT": "Støt",
+  "SUPPORTER_TITLE": "En hilsen fra Gian, grundlæggeren",
+  "SUPPORTER_MESSAGE": "Libre Closet er gratis, open source og vil aldrig låse funktioner bag en betalingsmur for selvhostere! Hvis det har gjort dit liv lidt nemmere, beder vi dig om at overveje at støtte os. Vi er en lille gruppe ingeniører, der arbejder i vores fritid, og din støtte hjælper os med at finde tid til at forbedre de værktøjer, der gør dit liv mere bekvemt.",
+  "SUPPORTER_SIGNATURE": "— Gian, grundlægger og udvikler hos Lazztech LLC",
+  "SUPPORTER_CTA": "Støt på Ko-fi",
+  "SUPPORTER_DISMISS": "Ikke nu"
 }
