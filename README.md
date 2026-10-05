@@ -2,7 +2,7 @@
 
 > Your wardrobe. Your data.
 
-A free, open-source, self-hosted wardrobe organizer. Catalog your clothes, upload photos, build outfits, and access everything from your phone as an offline-ready PWA - all on your own server.
+The easiest to deploy and host free, open-source, self-hosted wardrobe organizer! Catalog your clothes, upload photos, build outfits, and access everything from your phone as an offline-ready PWA - all on your own server.
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Version](https://img.shields.io/github/v/tag/lazztech/libre-closet?label=Version&color=green)](https://github.com/lazztech/libre-closet/tags)
@@ -14,7 +14,11 @@ Crafted and engineered with care and intention by [Lazztech LLC](https://lazz.te
 
 ---
 
-## News
+## Significant News
+
+**`v0.6.0` Weather Forcasting - October 5, 2026**
+
+You can see an overview of the weather forecast for your area when you're scheduling out your outfits. Want to know more about a specific important date? Tap on the weather preview label on the calendar day card and you'll see more detail about the weather forecast for that day!
 
 **`v0.4.0` Wardrobe Sharing - June 13, 2026**
 
@@ -24,28 +28,13 @@ To share your wardrobe, navigate to your profile (either through the hamburger m
 
 Or from the same wardrobe sharing page, if you would like grant someone else permissions to manage your wardrobe then select the permission drop down and choose "Can edit", copy the invite link, and send it to your stylist friends.
 
-**`v0.3.1` Significant Performance Improvements - May 26, 2026**
-
-Libre Closet is now more performant, making more efficient use of your existing hardware!
-
-We've [refactored the server](https://github.com/Lazztech/Libre-Closet/pull/79) resulting in nearly a 2x throughput increase, almost half the latency, and the lighthouse speed score has gone from [68/100](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1779424001828-3096.report.html) to [99/100](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1779843850519-27579.report.html).
-
-| Metric       | Before       | After        | Change      |
-| ------------ | ------------ | ------------ | ----------- |
-| Requests/sec | 1,188.10     | 2,091.64     | **+76.05%** |
-| Latency avg  | 7.90 ms      | 4.24 ms      | **–46.33%** |
-| Latency p50  | 7.00 ms      | 4.00 ms      | **–42.86%** |
-| Latency p99  | 18.00 ms     | 11.00 ms     | **–38.89%** |
-| Throughput   | 26.39 MB/sec | 44.30 MB/sec | **+67.87%** |
-
 #### Release
 
-- `v0.5.1 - 2026-09-10`: Save confirmations, Camera option for garment photo upload, and outfit builder fix
+- `v0.6.0 - October 5, 2026`: Weather forecast info for outfit scheduling, Danish language support, and bug fixes
+- `v0.5.1 - September 10, 2026`: Save confirmations, Camera option for garment photo upload, and outfit builder fix
 - `v0.5.0 - June 26, 2026`: Added garment color combination support, washing details, acquisition date, archival, and cloning
 - `v0.4.1 - June 15, 2026`: Fixed disable register functionality
 - `v0.4.0 - June 13, 2026`: Added wardrobe sharing from one user to another with either view only or edit permissions
-- `v0.3.2 - June 09, 2026`: Added background removal toggle for garment image uploads.
-- `v0.3.1 - May 26, 2026`: Refactored server resulting in nearly a 2x throughput increase and almost half the latency.
 
 For full details refer to the [CHANGELOG](CHANGELOG.md).
 
@@ -86,6 +75,7 @@ Note, these screenshots are taken of the web application viewed as an installed 
 - **Customizable categories** - custom category support with filtering and input suggestion as you type
 - **Outfit builder** - combine garments into saved looks with the Clueless inspired outfit builder
 - **Outfit Scheduling** - schedule out multiple outfits for given days through the week and get a view of what you've worn
+- **Weather Forecasting** - see weather forecasts while scheduling outfits for your important upcoming days
 - **Image Background Removal** - Images automatically have their backgrounds removed and optimized WebP upon upload
 - **Offline-ready PWA** - install to home screen, works without internet
 - **Optional auth** - run open for personal use or enable JWT accounts for multi-user
@@ -93,9 +83,25 @@ Note, these screenshots are taken of the web application viewed as an installed 
 - **SQLite or PostgreSQL** - SQLite by default, PostgreSQL for scale
 - **Multi-language** - UI available in English, Italian, French, Russian, German, Spanish, and Danish
 
+#### Performance
+
+Libre Closet is now more performant, making more efficient use of your existing hardware!
+
+We've [refactored the server](https://github.com/Lazztech/Libre-Closet/pull/79) resulting in nearly a 2x throughput increase, almost half the latency, and the lighthouse speed score has gone from [68/100](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1779424001828-3096.report.html) to [99/100](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1779843850519-27579.report.html).
+
+| Metric       | Before       | After        | Change      |
+| ------------ | ------------ | ------------ | ----------- |
+| Requests/sec | 1,188.10     | 2,091.64     | **+76.05%** |
+| Latency avg  | 7.90 ms      | 4.24 ms      | **–46.33%** |
+| Latency p50  | 7.00 ms      | 4.00 ms      | **–42.86%** |
+| Latency p99  | 18.00 ms     | 11.00 ms     | **–38.89%** |
+| Throughput   | 26.39 MB/sec | 44.30 MB/sec | **+67.87%** |
+
 ---
 
 ## Self-hosting
+
+Libre Closet requires just one, easy to deploy and host docker container! It defaults to sqlite, and local filestorage so you don't need to worry about the headache of hosting and maintaining a postgres db and redis instance.
 
 ### Docker (recommended)
 
