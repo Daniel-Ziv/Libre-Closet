@@ -5,5 +5,5 @@ cd "$(dirname "$0")"
 
 ./backup.sh
 git pull --ff-only
-railway up --ci
-railway service status
+fly deploy
+fly status

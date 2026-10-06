@@ -1,30 +1,29 @@
-# Personal Railway deployment
+# Personal Fly.io deployment
 
-Railway is the primary personal deployment target. Its Free plan includes $1
-of monthly usage, one 0.5 GB persistent volume, free builds, automatic HTTPS,
-and serverless sleeping. Libre Closet's low-traffic personal workload can sleep
-between visits and wake on demand.
+This deployment runs one Libre Closet Docker container on Fly.io with one
+persistent volume. SQLite and uploaded photos remain together under `/data`.
+There is no separate database, object store, proxy, or VM to administer.
 
-The `/data` volume contains both SQLite and uploaded clothing photos:
-
-- `/data/sqlite3.db`: database
-- `/data/*.webp`: uploaded and processed photos
-- `/data/app.log`: application log
-
-No PostgreSQL, Redis, S3 service, VM, Caddy, or open firewall is required.
+The Fly Machine uses 512 MB RAM and automatically stops after several idle
+minutes. The next request starts it again. Fly bills running compute by the
+second; the 1 GB persistent volume is billed continuously. Automatic HTTPS and
+a shared public IP are included.
 
 ## Deploy and operate
 
-Install and authenticate the Railway CLI, create or link a Railway project and
-service, then run `./deploy.sh`. The service uses `railway.toml` and the existing
-Dockerfile. Enable Railway's Serverless option so it sleeps when idle.
+Install and authenticate `flyctl`, create the application, and run:
 
-After deployment, open the generated `https://*.up.railway.app` URL, create the
-first account with a strong unique password, and immediately disable further
+```bash
+./deploy.sh
+```
+
+The first deployment creates the `libre_closet_data` 1 GB volume in `iad` with
+scheduled snapshots. Open the generated `https://APP.fly.dev` address, create
+the first account with a strong unique password, and immediately disable new
 registration:
 
 ```bash
-railway variable set DISABLE_REGISTRATION=true
+fly secrets set DISABLE_REGISTRATION=true
 ```
 
 Routine commands:
@@ -32,23 +31,23 @@ Routine commands:
 ```bash
 ./update.sh
 ./backup.sh
-railway service status
-railway logs
-railway service restart --yes
+fly status
+fly logs
+fly apps restart
 ```
 
-Schedule Railway volume backups under the service's **Backups** settings.
-`./backup.sh` also makes an online-consistent SQLite backup, copies the photos,
-and downloads the result locally. Railway's native backup restore creates a new
-volume from the selected snapshot and keeps the previous volume available.
+`./backup.sh` creates an online-consistent SQLite copy, packages it with all
+uploaded WebP images, and downloads the archive into `backups/`. Fly also takes
+scheduled volume snapshots; list them with `fly volumes snapshots list VOLUME_ID`.
 
-## Domain limitation
+## Persistent state
 
-Railway provides automatic HTTPS on its generated domain. Railway custom domains
-require both CNAME and TXT records. DuckDNS exposes A/AAAA updates rather than
-the records Railway requires, so a DuckDNS subdomain cannot be attached safely.
-Use the generated Railway HTTPS URL, or use a domain whose DNS supports CNAME
-and TXT records.
+- `/data/sqlite3.db`: users and wardrobe records
+- `/data/*.webp`: uploaded and processed photos
+- `/data/app.log`: application log
+
+The volume survives Machine stops, restarts, and deployments. Keep occasional
+downloaded backups outside Fly.io as protection against account or volume loss.
 
 ## iPhone
 

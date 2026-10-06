@@ -77,4 +77,3 @@ node_modules/
 # Personal production deployment state
 /data.pre-restore-*/
 /backups/
-/.railway/
