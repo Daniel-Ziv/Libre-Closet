@@ -101,8 +101,8 @@ We've [refactored the server](https://github.com/Lazztech/Libre-Closet/pull/79) 
 
 ## Self-hosting
 
-For a personal HTTPS deployment with Docker Compose, Caddy, persistent SQLite
-and photo storage, backups, and simple update scripts, see
+For a personal Railway deployment with automatic HTTPS, persistent SQLite and
+photo storage, backups, and simple update scripts, see
 [Personal production deployment](docs/DEPLOYMENT.md).
 
 Libre Closet requires just one, easy to deploy and host docker container! It defaults to sqlite, and local filestorage so you don't need to worry about the headache of hosting and maintaining a postgres db and redis instance.

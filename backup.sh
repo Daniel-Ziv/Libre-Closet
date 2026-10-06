@@ -3,26 +3,31 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-compose=(docker compose --env-file .env.production -f docker-compose.production.yml)
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-archive="backups/libre-closet-${timestamp}.tar.gz"
-was_running=false
+remote="/tmp/libre-closet-${timestamp}"
+local_path="backups/libre-closet-${timestamp}"
 
-mkdir -p backups data
+mkdir -p backups
 
-if [[ "$("${compose[@]}" ps --status running --services 2>/dev/null | grep -c '^app$' || true)" -gt 0 ]]; then
-  was_running=true
-  "${compose[@]}" stop app
-fi
+railway ssh -- node -e '
+  const fs = require("fs");
+  const Database = require("better-sqlite3");
+  const target = process.argv[1];
+  fs.mkdirSync(target, { recursive: true });
+  const db = new Database("/data/sqlite3.db");
+  db.backup(`${target}/sqlite3.db`)
+    .then(() => {
+      for (const name of fs.readdirSync("/data")) {
+        if (name.endsWith(".webp")) fs.copyFileSync(`/data/${name}`, `${target}/${name}`);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    })
+    .finally(() => db.close());
+' "$remote"
 
-restart_app() {
-  if [[ "$was_running" == true ]]; then
-    "${compose[@]}" start app >/dev/null
-  fi
-}
-trap restart_app EXIT
-
-tar -czf "$archive" data
-tar -tzf "$archive" >/dev/null
-
-echo "Backup created: $archive"
+railway service files download "$remote" "$local_path"
+test -s "$local_path/sqlite3.db"
+echo "Backup downloaded: $local_path"

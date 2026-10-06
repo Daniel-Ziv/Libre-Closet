@@ -1,64 +1,54 @@
-# Personal production deployment
+# Personal Railway deployment
 
-This deployment runs Libre Closet and Caddy on one small Linux VM. Caddy is the
-only public container. It terminates HTTPS and proxies to Libre Closet over the
-private Compose network. Libre Closet uses SQLite and local image storage in
-`./data`, which is bind-mounted at `/app/data`.
+Railway is the primary personal deployment target. Its Free plan includes $1
+of monthly usage, one 0.5 GB persistent volume, free builds, automatic HTTPS,
+and serverless sleeping. Libre Closet's low-traffic personal workload can sleep
+between visits and wake on demand.
 
-## Host requirements
+The `/data` volume contains both SQLite and uploaded clothing photos:
 
-- A Linux VM with a public IP
-- Docker Engine with the Compose v2 plugin
-- TCP ports 22, 80, and 443 allowed; UDP 443 is optional but enables HTTP/3
-- A DuckDNS hostname pointed at the VM's public IP
+- `/data/sqlite3.db`: database
+- `/data/*.webp`: uploaded and processed photos
+- `/data/app.log`: application log
 
-No PostgreSQL, Redis, S3 service, or DuckDNS update token is needed when the VM
-has a stable public IP.
+No PostgreSQL, Redis, S3 service, VM, Caddy, or open firewall is required.
 
-## Deploy
+## Deploy and operate
+
+Install and authenticate the Railway CLI, create or link a Railway project and
+service, then run `./deploy.sh`. The service uses `railway.toml` and the existing
+Dockerfile. Enable Railway's Serverless option so it sleeps when idle.
+
+After deployment, open the generated `https://*.up.railway.app` URL, create the
+first account with a strong unique password, and immediately disable further
+registration:
 
 ```bash
-cp .env.production.example .env.production
-chmod 600 .env.production
+railway variable set DISABLE_REGISTRATION=true
 ```
 
-Set `DOMAIN` in `.env.production` to the full DuckDNS hostname, then run:
-
-```bash
-./deploy.sh
-```
-
-The script generates the JWT signing secret automatically. Open the HTTPS URL,
-create the first account with a strong unique password, then set
-`DISABLE_REGISTRATION=true` in `.env.production` and rerun `./deploy.sh`.
-
-## Operations
-
-All commands run from the repository directory:
+Routine commands:
 
 ```bash
 ./update.sh
 ./backup.sh
-./restore.sh backups/libre-closet-TIMESTAMP.tar.gz
-docker compose --env-file .env.production -f docker-compose.production.yml ps
-docker compose --env-file .env.production -f docker-compose.production.yml logs -f
-docker compose --env-file .env.production -f docker-compose.production.yml restart
+railway service status
+railway logs
+railway service restart --yes
 ```
 
-Backups briefly stop the application so the SQLite database, WAL files, and
-photos are captured consistently. Copy backup archives off the VM periodically;
-backups left only on the VM do not protect against VM or disk loss.
+Schedule Railway volume backups under the service's **Backups** settings.
+`./backup.sh` also makes an online-consistent SQLite backup, copies the photos,
+and downloads the result locally. Railway's native backup restore creates a new
+volume from the selected snapshot and keeps the previous volume available.
 
-## Persistent state
+## Domain limitation
 
-- `data/sqlite3.db`: application database
-- `data/*.webp`: uploaded and processed clothing photos
-- `data/app.log`: application log
-- Docker volume `libre-closet_caddy_data`: TLS certificates and Caddy state
-
-The application data survives container recreation, Docker restart, and host
-reboot. The Caddy volume is convenient but not essential to back up because
-certificates can be reissued automatically.
+Railway provides automatic HTTPS on its generated domain. Railway custom domains
+require both CNAME and TXT records. DuckDNS exposes A/AAAA updates rather than
+the records Railway requires, so a DuckDNS subdomain cannot be attached safely.
+Use the generated Railway HTTPS URL, or use a domain whose DNS supports CNAME
+and TXT records.
 
 ## iPhone
 
