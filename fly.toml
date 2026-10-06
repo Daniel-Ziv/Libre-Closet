@@ -1,3 +1,4 @@
+app = "libre-closet-daniel-ziv"
 primary_region = "iad"
 
 [build]
@@ -14,6 +15,7 @@ primary_region = "iad"
   DATABASE_SCHEMA = "/data/sqlite3.db"
   FILE_STORAGE_TYPE = "local"
   PORT = "3000"
+  SITE_URL = "https://libre-closet-daniel-ziv.fly.dev"
 
 [http_service]
   internal_port = 3000
