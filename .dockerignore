@@ -1,0 +1,13 @@
+.git
+.github
+.env.*
+!.env.production.example
+node_modules
+dist
+coverage
+data
+data.pre-restore-*
+backups
+test-results
+playwright-report
+npm-debug.log*

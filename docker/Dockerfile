@@ -1,5 +1,9 @@
+# syntax=docker/dockerfile:1
+
 # Build stage
 FROM node:22 AS builder
+
+ARG NPM_VERSION=11.9.0
 
 # Create app directory
 WORKDIR /app
@@ -12,7 +16,8 @@ WORKDIR /app
 # the destination must be a directory and end with a /
 COPY package*.json ./
 COPY patches ./patches
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --global "npm@${NPM_VERSION}" && npm ci
 
 COPY src ./src
 COPY views ./views
@@ -29,9 +34,8 @@ FROM node:22-slim
 
 WORKDIR /app
 
+COPY --from=builder /app/node_modules ./node_modules
 COPY package*.json ./
-COPY patches ./patches
-RUN npm ci
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
